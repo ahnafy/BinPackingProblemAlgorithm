@@ -32,7 +32,7 @@ public class Main {
 
         //create 3 empty bins of size B
         ArrayList<Bin> bins = new ArrayList<Bin>();
-        for (int i = 0; i < 6; i++){ bins.add(new Bin(B)); }
+        for (int i = 0; i < 3; i++){ bins.add(new Bin(B)); }
 
         // find ideal bin space if everything were to fit perfectly
         int sumOfN = 0;
@@ -64,10 +64,10 @@ public class Main {
 
         // for every number given
         boolean packed;
-        for (int i = 0; i < unusedNumbers.size(); i++) {
+        while (!unusedNumbers.isEmpty()) {
             packed = false;
 
-            Integer number = unusedNumbers.get(i);
+            Integer number = unusedNumbers.get(0);
 
             // for every number, find first available bin (it's possible to not find any)
             for (int j = 0; j < bins.size(); j++) {
@@ -101,6 +101,7 @@ public class Main {
             }
             if (packed == false) {
                 unusedSum += number;
+                unusedNumbers.remove(number);
                 System.out.println("unusedSum had " + number + " added to it. unusedSum = " + unusedSum);
             }
         }
