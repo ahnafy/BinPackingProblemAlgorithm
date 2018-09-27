@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Main {
@@ -16,43 +13,94 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
 
-        int B = 0;
-        int N = 0;
+        int B = sc.nextInt();
+        int N = sc.nextInt();
+
         ArrayList<Integer> unusedNumbers = new ArrayList<Integer>();
 
-        //create 3 empty bins of size 5
-        ArrayList<Bin> unfilledBins = new ArrayList<Bin>();
-        for (int i = 0; i < 3; i++){
-            unfilledBins.add(new Bin(B));
+        // add remaining numbers in input to unusedNumbers
+        for (int i = 0; i < N; i++) {
+            unusedNumbers.add(sc.nextInt());
         }
 
+        // sort resulting array of numbers in reverse order
+        Collections.sort(unusedNumbers, Collections.reverseOrder());
+
+        System.out.println("B=" + B + ", N=" + N);
+        // check reverse sorting
+        System.out.println(unusedNumbers);
+
+        //create 3 empty bins of size B
+        ArrayList<Bin> bins = new ArrayList<Bin>();
+        for (int i = 0; i < 3; i++){ bins.add(new Bin(B)); }
+
+        // find ideal bin space if everything were to fit perfectly
+        int sumOfN = 0;
+        for (Integer number : unusedNumbers) {
+            sumOfN += number;
+        }
+
+        int idealUnpackedSpace = (B * 3) - sumOfN;
+
+        int remainingUnpackedSum = fillBins(unusedNumbers, bins);
+        int remainingUnpackedSpace = 0;
+        for (Bin bin : bins) {
+            remainingUnpackedSpace += bin.size - bin.currentFill;
+        }
+
+
+        System.out.println("idealUnpackedSpace: " + idealUnpackedSpace);
+        System.out.println("remainingUnpackedSum: " + remainingUnpackedSum);
+        System.out.println("remainingUnpackedSpace: " + remainingUnpackedSpace);
+        for (Bin bin : bins){
+            System.out.println("bin currentFill: " + bin.currentFill + "/" + bin.size);
+        }
     }
 
-    public static int fillBins(ArrayList<Integer> unusedNumbers, ArrayList<Bin> unfilledBins) {
+    public static int fillBins(ArrayList<Integer> unusedNumbers, ArrayList<Bin> bins) {
         int unusedSum = 0;
 
         // for every number given
         boolean packed;
-        for (Integer number : unusedNumbers) {
+        for (int i = 0; i < unusedNumbers.size(); i++) {
             packed = false;
 
-            // check if number fits in each bin
-            for (Bin bin : unfilledBins) {
+            Integer number = unusedNumbers.get(i);
 
-                // if number not already added to a bin and
-                // adding number to bin is successful,
-                // remove number from unusedNumbers
-                if (!packed && bin.tryAdd(number)) {
-                    unusedNumbers.remove(number);
-                    packed = true;
+            // for every number, find first available bin (it's possible to not find any)
+            for (int j = 0; j < bins.size(); j++) {
+
+                Bin bin = bins.get(j);
+
+                // if number has not been packed in a bin
+                if (!packed && !bin.isFull()) {
+
+                    // if adding number to bin is successful,
+                    // remove number from unusedNumbers
+                    // and set packed to true
+                    if (bin.tryAdd(number)) {
+                        unusedNumbers.remove(number);
+                        packed = true;
+                        System.out.println("Added " + number + " to bin "
+                                + j + ". currentFill for bin " + j
+                                + " is " + bin.currentFill + "/" + bin.size);
+                    }
+                    else { System.out.println("Failed to add " + number
+                            + " to bin " + j + ". currentFill for bin "
+                            + j + " is " + bin.currentFill + "/" + bin.size); }
+
+                    // if bin is full, remove from unfilledBins
+                    // so we're not trying to add to it anymore
+                    if (bin.isFull()) {
+                        System.out.println("Bin " + j + " became full");
+                    }
                 }
 
-                // if bin is full, remove from unfilledBins
-                if (bin.isFull()) {
-                    unfilledBins.remove(bin);
-                }
             }
-            if (packed = false) { unusedSum += number; }
+            if (packed == false) {
+                unusedSum += number;
+                System.out.println("unusedSum had " + number + " added to it. unusedSum = " + unusedSum);
+            }
         }
         return unusedSum;
     }
