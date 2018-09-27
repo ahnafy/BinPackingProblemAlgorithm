@@ -32,7 +32,7 @@ public class Main {
 
         //create 3 empty bins of size B
         ArrayList<Bin> bins = new ArrayList<Bin>();
-        for (int i = 0; i < 3; i++){ bins.add(new Bin(B)); }
+        for (int i = 0; i < 6; i++){ bins.add(new Bin(B)); }
 
         // find ideal bin space if everything were to fit perfectly
         int sumOfN = 0;
@@ -40,7 +40,7 @@ public class Main {
             sumOfN += number;
         }
 
-        int idealUnpackedSpace = (B * 3) - sumOfN;
+        //int idealUnpackedSpace = (B * 3) - sumOfN;
 
         int remainingUnpackedSum = fillBins(unusedNumbers, bins);
         int remainingUnpackedSpace = 0;
@@ -49,9 +49,11 @@ public class Main {
         }
 
 
-        System.out.println("idealUnpackedSpace: " + idealUnpackedSpace);
-        System.out.println("remainingUnpackedSum: " + remainingUnpackedSum);
-        System.out.println("remainingUnpackedSpace: " + remainingUnpackedSpace);
+        System.out.println("Sum of array: " + sumOfN);
+        System.out.println("B * 3: " + B*3);
+        //System.out.println("idealUnpackedSpace: " + idealUnpackedSpace);
+        System.out.println("Empty space in bins: " + remainingUnpackedSpace);
+        System.out.println("Sum of leftover unpacked elements: " + remainingUnpackedSum);
         for (Bin bin : bins){
             System.out.println("bin currentFill: " + bin.currentFill + "/" + bin.size);
         }
