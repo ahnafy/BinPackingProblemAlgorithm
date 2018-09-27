@@ -1,12 +1,20 @@
 import java.util.ArrayList;
 
-public class bin {
+public class Bin {
     public int size;
     public int currentFill;
 
-    public bin(int size){
+    public Bin(int size){
         this.size = size;
         currentFill = 0;
+    }
+
+    public boolean tryAdd(Integer number) {
+        boolean addable = (currentFill + number) <= size;
+        if (addable) {
+            currentFill += number;
+        }
+        return addable;
     }
 
     // Check if the bin is full
@@ -22,12 +30,12 @@ public class bin {
 
 
     // Fills the bin as much as possible and print it with avery
-    public static void fillBin(ArrayList arr, bin bin) {
+    public static void fillBin(ArrayList arr, Bin bin) {
 
             }
         }
 
-        System.out.println();
-    }
 
-}
+
+
+
